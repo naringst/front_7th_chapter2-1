@@ -1,3 +1,5 @@
+import { attachHomePageEventListeners } from "../handlers";
+
 export function createRouter(routes, state) {
   // base path 설정 (개발: /, 배포: /front_7th_chapter2-1/)
   const basePath = import.meta.env.BASE_URL || "/";
@@ -18,6 +20,7 @@ export function createRouter(routes, state) {
   };
 
   const navigateTo = (path) => {
+    // base path 포함해서 URL 변경
     const fullPath = basePath + path.replace(/^\//, "");
     window.history.pushState({}, "", fullPath);
     handleRoute();
@@ -44,6 +47,9 @@ export function createRouter(routes, state) {
     // 해당 컴포넌트 렌더링 (async!)
     const html = await matchedRoute.element({ ...state.getState(), params: {} });
     $root.innerHTML = html;
+
+    // 이벤트 리스너 붙이기
+    attachHomePageEventListeners();
   };
 
   return { initRouter, navigateTo };

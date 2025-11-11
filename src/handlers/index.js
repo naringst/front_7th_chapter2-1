@@ -1,0 +1,54 @@
+import { getCategories, getProducts } from "../api/productApi";
+import { HomePage } from "../pages/HomePage";
+
+function itemLimitSelectEventListener() {
+  const itemLimitSelector = document.querySelector("#limit-select");
+
+  itemLimitSelector.addEventListener("change", async (event) => {
+    const selectedLimit = event.target.value;
+
+    const $root = document.querySelector("#root");
+    const data = await getProducts({ limit: selectedLimit });
+    const categories = await getCategories();
+
+    $root.innerHTML = HomePage({ ...data, categories, loading: false, limit: selectedLimit });
+    itemLimitSelectEventListener();
+  });
+}
+
+function searchEventListener() {
+  const searchInput = document.querySelector("#search-input");
+
+  searchInput.addEventListener("keydown", async (event) => {
+    if (event.key !== "Enter") return;
+
+    const searchValue = event.target.value;
+    const $root = document.querySelector("#root");
+    const data = await getProducts({ search: searchValue });
+    const categories = await getCategories();
+
+    $root.innerHTML = HomePage({ ...data, categories, loading: false, search: searchValue });
+    searchEventListener();
+  });
+}
+
+function clickCategory1EventListener() {
+  const categoryButton = document.querySelectorAll(".category1-filter-btn");
+
+  categoryButton.forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      const category1 = event.target.dataset.category1;
+      const $root = document.querySelector("#root");
+      const data = await getProducts({ category1 });
+      const categories = await getCategories();
+      $root.innerHTML = HomePage({ ...data, categories, loading: false });
+      clickCategory1EventListener();
+    });
+  });
+}
+
+export function attachHomePageEventListeners() {
+  itemLimitSelectEventListener();
+  searchEventListener();
+  clickCategory1EventListener();
+}
