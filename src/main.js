@@ -43,11 +43,27 @@ function searchEventListener() {
   });
 }
 
+function clickCategory1EventListener() {
+  const categoryButton = document.querySelectorAll(".category1-filter-btn");
+
+  categoryButton.forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      const category1 = event.target.dataset.category1;
+      const $root = document.querySelector("#root");
+      const data = await getProducts({ category1 });
+      const categories = await getCategories();
+      $root.innerHTML = HomePage({ ...data, categories, loading: false });
+      clickCategory1EventListener();
+    });
+  });
+}
+
 async function main() {
   App();
 
   itemLimitSelectEventListener();
   searchEventListener();
+  clickCategory1EventListener();
 }
 
 // 애플리케이션 시작
