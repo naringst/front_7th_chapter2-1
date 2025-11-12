@@ -5,7 +5,13 @@ async function loadPageData(currentPath, params, state) {
   // HomePage 데이터 로드
   if (currentPath === "/") {
     const [productsData, categories] = await Promise.all([
-      getProducts({ limit: state.limit, search: state.search, category1: state.category1 }),
+      getProducts({
+        limit: state.limit,
+        search: state.search,
+        category1: state.category1,
+        current: state.current,
+        sort: state.sort,
+      }),
       getCategories(),
     ]);
     return {
@@ -90,7 +96,8 @@ export function createRouter(routes, state) {
       limit: parseInt(urlParams.get("limit")) || 20,
       search: urlParams.get("search") || "",
       category1: urlParams.get("category1") || "",
-      page: parseInt(urlParams.get("page")) || 1,
+      current: parseInt(urlParams.get("current")) || 1,
+      sort: urlParams.get("sort") || "price_asc",
     };
 
     // 전역 상태 업데이트 (URL이 단일 진실 공급원)

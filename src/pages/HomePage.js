@@ -10,6 +10,7 @@ export const HomePage = ({
   categories = {},
   products = [],
   pagination = { total: 0 },
+  sort,
 }) => {
   return PageLayout({
     children: `${Search({
@@ -17,6 +18,7 @@ export const HomePage = ({
       categories,
       limit,
       search,
+      sort,
     })} ${ProductList({
       loading,
       products,

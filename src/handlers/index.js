@@ -17,6 +17,22 @@ function itemLimitSelectEventListener() {
   });
 }
 
+function itemSortSelectEventListener() {
+  const itemSortSelector = document.querySelector("#sort-select");
+  if (!itemSortSelector) return;
+
+  itemSortSelector.addEventListener("change", (event) => {
+    const selectedSort = event.target.value;
+
+    // 현재 URL의 searchParams 가져오기
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("sort", selectedSort);
+
+    // Router의 navigateTo 호출
+    router.navigateTo(`/?${searchParams.toString()}`);
+  });
+}
+
 function searchEventListener() {
   const searchInput = document.querySelector("#search-input");
   if (!searchInput) return;
@@ -67,6 +83,7 @@ function clickProductItem() {
 
 export function attachHomePageEventListeners() {
   itemLimitSelectEventListener();
+  itemSortSelectEventListener();
   searchEventListener();
   clickCategory1EventListener();
   clickProductItem();
