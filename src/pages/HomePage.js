@@ -1,22 +1,26 @@
 import { ProductList } from "../components/products/productList/ProductList.js";
 import { Search } from "../components/search/Serach.js";
 import { PageLayout } from "./PageLayout.js";
-import { getProducts, getCategories } from "../api/productApi.js";
 
-export const HomePage = async ({ limit = 20, search = "", category1 = "" }) => {
-  const data = await getProducts({ limit, search, category1 });
-  const categories = await getCategories();
-
+// loading prop에 따라 UI 분기
+export const HomePage = ({
+  loading = true,
+  limit = 20,
+  search = "",
+  categories = {},
+  products = [],
+  pagination = { total: 0 },
+}) => {
   return PageLayout({
     children: `${Search({
-      loading: false,
+      loading,
       categories,
       limit,
       search,
     })} ${ProductList({
-      loading: false,
-      products: data.products,
-      pagination: data.pagination,
+      loading,
+      products,
+      pagination,
     })}`,
   });
 };

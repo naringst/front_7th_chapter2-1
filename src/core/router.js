@@ -1,3 +1,29 @@
+import { getProducts, getCategories, getProduct } from "../api/productApi.js";
+
+// 페이지별 데이터 로딩 함수
+async function loadPageData(currentPath, params, state) {
+  // HomePage 데이터 로드
+  if (currentPath === "/") {
+    const [productsData, categories] = await Promise.all([
+      getProducts({ limit: state.limit, search: state.search, category1: state.category1 }),
+      getCategories(),
+    ]);
+    return {
+      products: productsData.products,
+      pagination: productsData.pagination,
+      categories,
+    };
+  }
+
+  // DetailPage 데이터 로드
+  if (currentPath.startsWith("/product/")) {
+    const product = await getProduct(params.id);
+    return { product };
+  }
+
+  return {};
+}
+
 // 정적 라우트 매칭
 function matchStaticRoute(route, currentPath) {
   return route.path === currentPath;
@@ -68,18 +94,15 @@ export function createRouter(routes, state) {
     // params 처리 (동적일 경우만)
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
-    // 로딩 표시
-    $root.innerHTML = `
-      <div class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p class="text-gray-600">로딩 중...</p>
-        </div>
-      </div>
-    `;
+    // 로딩 UI 먼저 렌더링 (loading: true)
+    const loadingHTML = matchedRoute.element({ ...state.getState(), params, loading: true });
+    $root.innerHTML = loadingHTML;
 
-    // 렌더링
-    const html = await matchedRoute.element({ ...state.getState(), params });
+    // 데이터 로드
+    const pageData = await loadPageData(currentPath, params, state.getState());
+
+    // 실제 데이터로 렌더링 (loading: false)
+    const html = matchedRoute.element({ ...state.getState(), params, loading: false, ...pageData });
     $root.innerHTML = html;
 
     // 페이지별 이벤트 리스너 붙이기
