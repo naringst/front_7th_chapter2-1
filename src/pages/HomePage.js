@@ -1,4 +1,4 @@
-import { ProductList } from "../components/products/ProductList.js";
+import { ProductList } from "../components/products/productList/ProductList.js";
 import { Search } from "../components/search/Serach.js";
 import { PageLayout } from "./PageLayout.js";
 import { getProducts, getCategories } from "../api/productApi.js";
