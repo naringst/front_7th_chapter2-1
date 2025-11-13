@@ -1,5 +1,6 @@
 {
   "name": "front-chapter1-1",
+  "name": "front-chapter1-1",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,6 +14,8 @@
     "predeploy": "pnpm run build",
     "deploy": "gh-pages -d dist",
     "test:e2e": "playwright test",
+    "test:e2e:basic": "playwright test basic",
+    "test:e2e:advanced": "playwright test advanced",
     "test:e2e:basic": "playwright test basic",
     "test:e2e:advanced": "playwright test advanced",
     "test:e2e:ui": "playwright test --ui",
