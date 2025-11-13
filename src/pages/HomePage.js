@@ -2,18 +2,10 @@ import { ProductList } from "../components/products/productList/ProductList.js";
 import { Search } from "../components/search/Serach.js";
 import { PageLayout } from "./PageLayout.js";
 import { loadHomePageData as loadHomePageDataFromLoader } from "../utils/dataLoaders.js";
-
-/**
- * HomePage 데이터 로드
- * @param {Object} state - 페이지 상태
- * @returns {Promise<Object>} 페이지 데이터
- */
-export async function loadData(state) {
-  return await loadHomePageDataFromLoader(state);
-}
+import { createComponent } from "../core/component.js";
 
 // loading prop에 따라 UI 분기
-export const HomePage = ({
+const template = ({
   loading = true,
   limit = 20,
   search = "",
@@ -38,5 +30,27 @@ export const HomePage = ({
       products,
       pagination,
     })}`,
+  });
+};
+
+/**
+ * HomePage 데이터 로드
+ * @param {Object} state - 페이지 상태
+ * @returns {Promise<Object>} 페이지 데이터
+ */
+const loadData = async (state) => {
+  return await loadHomePageDataFromLoader(state);
+};
+
+/**
+ * HomePage 컴포넌트 생성
+ * @param {Function} attachHandlers - 이벤트 핸들러 연결 함수
+ * @returns {Object} 컴포넌트 인스턴스
+ */
+export const HomePage = (attachHandlers) => {
+  return createComponent({
+    template,
+    setup: loadData,
+    mounted: attachHandlers,
   });
 };

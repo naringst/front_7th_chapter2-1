@@ -1,5 +1,4 @@
 import { ErrorPage } from "../pages/ErrorPage.js";
-import { createComponent } from "./component.js";
 
 // 정적 라우트 매칭
 function matchStaticRoute(route, currentPath) {
@@ -89,13 +88,8 @@ export function createRouter(routes, state) {
     // params 처리 (동적일 경우만)
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
-    // 컴포넌트 생성 (템플릿, 데이터 로드, 이벤트 핸들러 연결)
-    // 컴포넌트가 자신의 데이터를 로드하고 이벤트 핸들러를 연결하도록 위임
-    const component = createComponent({
-      template: matchedRoute.element,
-      setup: matchedRoute.loadData ? (props) => matchedRoute.loadData({ ...props, params }) : undefined,
-      mounted: matchedRoute.attachHandlers,
-    });
+    // 페이지 컴포넌트 생성 (페이지가 자신의 컴포넌트를 생성)
+    const component = matchedRoute.element(matchedRoute.attachHandlers);
 
     // 컴포넌트 마운트
     await component.mount(

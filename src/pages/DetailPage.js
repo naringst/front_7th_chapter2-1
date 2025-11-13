@@ -5,18 +5,10 @@ import { DetailHeader } from "../components/products/productDetail/DetailHeader"
 import { DetailInfo } from "../components/products/productDetail/DetailInfo";
 import { RelatedItems } from "../components/products/productDetail/RelatedItems";
 import { loadDetailPageData } from "../utils/dataLoaders.js";
-
-/**
- * DetailPage 데이터 로드
- * @param {Object} props - 컴포넌트 props (params 포함)
- * @returns {Promise<Object>} 페이지 데이터
- */
-export async function loadData(props) {
-  return await loadDetailPageData(props.params || props);
-}
+import { createComponent } from "../core/component.js";
 
 // loading prop에 따라 UI 분기
-export const DetailPage = ({ loading = true, product = null }) => {
+const template = ({ loading = true, product = null }) => {
   return /*HTML*/ `
     <div class="min-h-screen bg-gray-50">
       ${DetailHeader()}
@@ -42,4 +34,26 @@ export const DetailPage = ({ loading = true, product = null }) => {
       ${Footer()}
     </div>
 `;
+};
+
+/**
+ * DetailPage 데이터 로드
+ * @param {Object} props - 컴포넌트 props (params 포함)
+ * @returns {Promise<Object>} 페이지 데이터
+ */
+const loadData = async (props) => {
+  return await loadDetailPageData(props.params || props);
+};
+
+/**
+ * DetailPage 컴포넌트 생성
+ * @param {Function} attachHandlers - 이벤트 핸들러 연결 함수
+ * @returns {Object} 컴포넌트 인스턴스
+ */
+export const DetailPage = (attachHandlers) => {
+  return createComponent({
+    template,
+    setup: loadData,
+    mounted: attachHandlers,
+  });
 };
