@@ -1,4 +1,4 @@
-import { cartState } from "../../App";
+import { cartState } from "../../stores/cartStore.js";
 
 export const CartIcon = () => {
   const items = cartState.getState().items;

@@ -1,4 +1,4 @@
-import { cartState } from "../App";
+import { cartState } from "../stores/cartStore.js";
 import { CartIcon } from "../components/cart/CartIcon";
 import { CartModal } from "../components/cart/CartModal";
 import { CartModalContent } from "../components/cart/CartModal/CartModalContent/CartModalContent";

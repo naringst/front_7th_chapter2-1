@@ -1,4 +1,4 @@
-import { cartState } from "../../App.js";
+import { cartState } from "../../stores/cartStore.js";
 import { showToast } from "../toast.js";
 
 /**
