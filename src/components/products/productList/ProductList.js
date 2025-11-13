@@ -1,4 +1,5 @@
 import { ProductItem, ProductItemSkeleton } from "./ProductItem";
+import { ProductListError } from "../../error/ProductListError.js";
 
 const Loading = /*HTML*/ `
         <div class="text-center py-4">
@@ -12,7 +13,21 @@ const Loading = /*HTML*/ `
           </div>
         </div>`;
 
-export const ProductList = ({ loading, products, pagination }) => {
+export const ProductList = ({
+  loading,
+  products = [],
+  pagination = { total: 0, page: 1, totalPages: 1 },
+  error = null,
+}) => {
+  // 에러 상태 처리
+  if (error) {
+    return /*HTML*/ `
+      <div class="mb-6">
+        ${ProductListError({ error })}
+      </div>
+    `;
+  }
+
   const hasMore = pagination.page < pagination.totalPages;
   const isLoadingMore = loading && products.length > 0; // 무한 스크롤 로딩 중
   const isInitialLoading = loading && products.length === 0; // 초기 로딩 중

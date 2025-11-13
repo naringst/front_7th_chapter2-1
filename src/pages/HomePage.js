@@ -16,6 +16,7 @@ const template = ({
   products = [],
   pagination = { total: 0 },
   sort = "price_asc",
+  error = null,
 }) => {
   return PageLayout({
     children: `${Search({
@@ -30,6 +31,7 @@ const template = ({
       loading,
       products,
       pagination,
+      error,
     })}`,
   });
 };

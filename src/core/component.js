@@ -8,13 +8,14 @@
  */
 export function createComponent({ template, setup, mounted }) {
   /**
-   * 컴포넌트 렌더링 (로딩 상태 포함)
+   * 컴포넌트 렌더링 (로딩 상태 및 에러 상태 포함)
    * @param {Object} props - 컴포넌트 props
    * @param {boolean} loading - 로딩 상태
+   * @param {Error|null} error - 에러 객체
    * @returns {string} HTML 문자열
    */
-  const render = (props = {}, loading = false) => {
-    return template({ ...props, loading });
+  const render = (props = {}, loading = false, error = null) => {
+    return template({ ...props, loading, error });
   };
 
   /**
@@ -27,17 +28,22 @@ export function createComponent({ template, setup, mounted }) {
     if (!container) return;
 
     // 1. 로딩 UI 먼저 렌더링
-    const loadingHTML = render(props, true);
+    const loadingHTML = render(props, true, null);
     container.innerHTML = loadingHTML;
 
     // 2. 데이터 로드 (setup 함수가 있으면)
     let pageData = {};
+    let error = null;
     if (setup) {
-      pageData = await setup(props);
+      try {
+        pageData = await setup(props);
+      } catch (err) {
+        error = err;
+      }
     }
 
-    // 3. 실제 데이터로 렌더링
-    const html = render({ ...props, ...pageData }, false);
+    // 3. 실제 데이터 또는 에러 상태로 렌더링
+    const html = render({ ...props, ...pageData }, false, error);
     container.innerHTML = html;
 
     // 4. 마운트 후 실행 (이벤트 핸들러 연결 등)

@@ -10,6 +10,7 @@ import {
 import { handleProductClick } from "./actions/productActions.js";
 import { handleAddToCartClick } from "./actions/productActions.js";
 import { setUpInfiniteScroll } from "./infiniteScroll.js";
+import { router } from "../App.js";
 
 let cleanupFunctions = [];
 
@@ -51,6 +52,18 @@ export function setupHomePageDelegation() {
     "add-to-cart": (event, element) => {
       event.stopPropagation(); // 상품 클릭 이벤트 전파 방지
       handleAddToCartClick(element);
+    },
+    // 재시도 버튼
+    "retry-products": () => {
+      // 현재 URL로 다시 라우팅하여 데이터 재로드
+      // base path 제거
+      const basePath = import.meta.env.BASE_URL || "/";
+      let currentPath = window.location.pathname;
+      if (basePath !== "/" && currentPath.startsWith(basePath)) {
+        currentPath = currentPath.replace(basePath, "/");
+      }
+      const searchParams = window.location.search;
+      router.navigateTo(currentPath + searchParams);
     },
   };
 
