@@ -12,7 +12,14 @@ export const getCartStateFromStorage = () => {
   try {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return { items: parsed };
+      }
+      if (parsed && Array.isArray(parsed.items)) {
+        return { items: parsed.items };
+      }
+      return { items: [] };
     }
   } catch (error) {
     console.error("Failed to load cart state from localStorage:", error);
