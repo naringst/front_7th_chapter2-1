@@ -53,6 +53,31 @@ export const CategoryLoading = () => {
   return `<div class="text-sm text-gray-500 italic">카테고리 로딩 중...</div>`;
 };
 
+export const CategoryBreadcrumb = ({ category1 = "", category2 = "" }) => {
+  const breadcrumbs = [
+    { label: "전체", action: "reset" },
+    category1 && { label: category1, action: "category1", data: category1 },
+    category2 && { label: category2, action: "category2", data: category2 },
+  ].filter(Boolean);
+
+  return breadcrumbs
+    .map((crumb, index) => {
+      const isLast = index === breadcrumbs.length - 1;
+      const buttonClass = isLast
+        ? "text-xs text-gray-600 cursor-default"
+        : "text-xs hover:text-blue-800 hover:underline";
+      const dataAttrs = crumb.data ? `data-category1="${crumb.data}"` : "";
+
+      return `
+        ${index > 0 ? '<span class="text-xs text-gray-500">&gt;</span>' : ""}
+        <button data-breadcrumb="${crumb.action}" ${dataAttrs} class="${buttonClass}">
+          ${crumb.label}
+        </button>
+      `;
+    })
+    .join("");
+};
+
 export const FirstDepthCategory = ({ category1 }) => {
   return /*HTML*/ ` 
     ${category1
@@ -67,23 +92,36 @@ export const FirstDepthCategory = ({ category1 }) => {
   `;
 };
 
-export const SecondDepthCategory = ({ category2List = [] }) => {
+export const SecondDepthCategory = ({ category2List = [], selectedCategory2 = "" }) => {
   if (!category2List || category2List.length === 0) return "";
 
   return /*HTML*/ `
     ${category2List
-      .map(
-        (category) => `
-      <button data-category2="${category}" class="category2-filter-btn text-left px-3 py-2 text-sm rounded-md border transition-colors bg-white border-gray-300 text-gray-700 hover:bg-gray-50">
+      .map((category) => {
+        const isSelected = category === selectedCategory2;
+        const buttonClass = isSelected
+          ? "category2-filter-btn text-left px-3 py-2 text-sm rounded-md border transition-colors bg-blue-100 border-blue-300 text-blue-800"
+          : "category2-filter-btn text-left px-3 py-2 text-sm rounded-md border transition-colors bg-white border-gray-300 text-gray-700 hover:bg-gray-50";
+
+        return `
+      <button data-category2="${category}" class="${buttonClass}">
         ${category}
       </button>
-    `,
-      )
+    `;
+      })
       .join("")}
   `;
 };
 
-export const Search = ({ loading, categories, limit, search = "", sort = "price_asc", category1 = "" }) => {
+export const Search = ({
+  loading,
+  categories,
+  limit,
+  search = "",
+  sort = "price_asc",
+  category1 = "",
+  category2 = "",
+}) => {
   const category1List = Object.keys(categories);
   const category2List = category1 ? Object.keys(categories[category1] || {}) : [];
 
@@ -97,7 +135,7 @@ export const Search = ({ loading, categories, limit, search = "", sort = "price_
         <div class="space-y-2">
           <div class="flex items-center gap-2">
             <label class="text-sm text-gray-600">카테고리:</label>
-            ${category1 ? `<button id="category-reset-btn" class="text-xs text-blue-600 hover:text-blue-800 hover:underline">← ${category1}</button>` : ""}
+            ${CategoryBreadcrumb({ category1, category2 })}
           </div>
           ${
             loading
@@ -110,7 +148,7 @@ export const Search = ({ loading, categories, limit, search = "", sort = "price_
                 ? /*HTML*/ `
                <!-- Category2 표시 (Category1 선택됨) -->
                <div class="flex flex-wrap gap-2">
-                 ${SecondDepthCategory({ category2List })}
+                 ${SecondDepthCategory({ category2List, selectedCategory2: category2 })}
                </div>`
                 : /*HTML*/ `
                <!-- Category1 표시 (초기 상태) -->

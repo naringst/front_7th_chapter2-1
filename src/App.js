@@ -9,6 +9,10 @@ const state = createStore({
   categories: {},
   limit: 20,
   search: "",
+  category1: "",
+  category2: "",
+  current: 1,
+  sort: "price_asc",
 });
 
 export const router = createRouter(

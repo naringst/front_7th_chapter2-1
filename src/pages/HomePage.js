@@ -8,6 +8,7 @@ export const HomePage = ({
   limit = 20,
   search = "",
   category1 = "",
+  category2 = "",
   categories = {},
   products = [],
   pagination = { total: 0 },
@@ -21,6 +22,7 @@ export const HomePage = ({
       search,
       sort,
       category1,
+      category2,
     })} ${ProductList({
       loading,
       products,

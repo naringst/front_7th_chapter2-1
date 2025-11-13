@@ -97,20 +97,30 @@ function clickCategory2EventListener() {
   });
 }
 
-function clickCategoryResetBtn() {
-  const resetBtn = document.querySelector("#category-reset-btn");
-  if (!resetBtn || resetBtn.dataset.listenerAttached) return;
+function clickBreadcrumbBtn() {
+  const breadcrumbBtns = document.querySelectorAll("[data-breadcrumb]");
 
-  resetBtn.dataset.listenerAttached = "true";
-  resetBtn.addEventListener("click", () => {
-    // 현재 URL의 searchParams 가져오기
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.delete("category1");
-    searchParams.delete("category2");
-    searchParams.set("current", "1");
+  breadcrumbBtns.forEach((btn) => {
+    if (btn.dataset.listenerAttached) return;
+    btn.dataset.listenerAttached = "true";
 
-    // Router의 navigateTo 호출
-    router.navigateTo(`/?${searchParams.toString()}`);
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.breadcrumb;
+      const searchParams = new URLSearchParams(window.location.search);
+
+      if (action === "reset") {
+        // 전체 - 모든 카테고리 초기화
+        searchParams.delete("category1");
+        searchParams.delete("category2");
+      } else if (action === "category1") {
+        // Category1 클릭 - category2만 초기화
+        searchParams.delete("category2");
+      }
+      // category2는 현재 선택된 상태이므로 클릭 불가 (cursor-default)
+
+      searchParams.set("current", "1");
+      router.navigateTo(`/?${searchParams.toString()}`);
+    });
   });
 }
 
@@ -131,7 +141,7 @@ export function attachHomePageEventListeners() {
   searchEventListener();
   clickCategory1EventListener();
   clickCategory2EventListener();
-  clickCategoryResetBtn();
+  clickBreadcrumbBtn();
   clickProductItem();
 }
 
