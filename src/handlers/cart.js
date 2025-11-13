@@ -1,6 +1,8 @@
 import { cartState } from "../App";
 import { CartIcon } from "../components/cart/CartIcon";
-import { CartModal, CartModalContent, CartModalAction } from "../components/cart/CartModal";
+import { CartModal } from "../components/cart/CartModal";
+import { CartModalContent } from "../components/cart/CartModal/CartModalContent/CartModalContent";
+import { CartModalAction } from "../components/cart/CartModal/CartModalAction/CartModalAction";
 
 let modalUnsubscribe = null;
 
