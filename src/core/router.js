@@ -1,4 +1,5 @@
 import { getProducts, getCategories, getProduct } from "../api/productApi.js";
+import { ErrorPage } from "../pages/ErrorPage.js";
 
 // 페이지별 누적 상품 저장
 let accumulatedProducts = [];
@@ -133,7 +134,9 @@ export function createRouter(routes, state) {
 
     const $root = document.querySelector("#root");
     if (!matchedRoute) {
-      $root.innerHTML = `<h1>404 Not Found</h1>`;
+      // 404 페이지 렌더링
+      $root.innerHTML = ErrorPage();
+
       return;
     }
 
