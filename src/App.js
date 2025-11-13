@@ -1,8 +1,8 @@
 import { createRouter } from "./core/router";
 import { createStore } from "./core/store";
 import { attachDetailPageHandlers, attachHomePageEventListeners } from "./handlers";
-import { DetailPage } from "./pages/DetailPage";
-import { HomePage } from "./pages/HomePage";
+import { DetailPage, loadData as loadDetailPageData } from "./pages/DetailPage";
+import { HomePage, loadData as loadHomePageData } from "./pages/HomePage";
 import { getCartStateFromStorage, saveCartStateToStorage } from "./utils/storage";
 
 const state = createStore({
@@ -29,11 +29,13 @@ export const router = createRouter(
     {
       path: "/",
       element: HomePage,
+      loadData: loadHomePageData,
       attachHandlers: attachHomePageEventListeners,
     },
     {
       path: "/product/:id",
       element: DetailPage,
+      loadData: loadDetailPageData,
       attachHandlers: attachDetailPageHandlers,
     },
   ],

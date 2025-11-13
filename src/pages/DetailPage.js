@@ -4,6 +4,16 @@ import { Breadcrumb } from "../components/products/productDetail/Breadcrumb";
 import { DetailHeader } from "../components/products/productDetail/DetailHeader";
 import { DetailInfo } from "../components/products/productDetail/DetailInfo";
 import { RelatedItems } from "../components/products/productDetail/RelatedItems";
+import { loadDetailPageData } from "../utils/dataLoaders.js";
+
+/**
+ * DetailPage 데이터 로드
+ * @param {Object} props - 컴포넌트 props (params 포함)
+ * @returns {Promise<Object>} 페이지 데이터
+ */
+export async function loadData(props) {
+  return await loadDetailPageData(props.params || props);
+}
 
 // loading prop에 따라 UI 분기
 export const DetailPage = ({ loading = true, product = null }) => {

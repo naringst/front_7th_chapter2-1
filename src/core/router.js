@@ -1,38 +1,5 @@
-import { getProducts, getCategories, getProduct } from "../api/productApi.js";
 import { ErrorPage } from "../pages/ErrorPage.js";
 import { createComponent } from "./component.js";
-
-// 페이지별 데이터 로딩 함수
-async function loadPageData(currentPath, params, state) {
-  // HomePage 데이터 로드
-  if (currentPath === "/") {
-    const [productsData, categories] = await Promise.all([
-      getProducts({
-        limit: state.limit,
-        search: state.search,
-        category1: state.category1,
-        category2: state.category2,
-        current: state.current,
-        sort: state.sort,
-      }),
-      getCategories(),
-    ]);
-
-    return {
-      products: productsData.products,
-      pagination: productsData.pagination,
-      categories,
-    };
-  }
-
-  // DetailPage 데이터 로드
-  if (currentPath.startsWith("/product/")) {
-    const product = await getProduct(params.id);
-    return { product };
-  }
-
-  return {};
-}
 
 // 정적 라우트 매칭
 function matchStaticRoute(route, currentPath) {
@@ -123,9 +90,10 @@ export function createRouter(routes, state) {
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
     // 컴포넌트 생성 (템플릿, 데이터 로드, 이벤트 핸들러 연결)
+    // 컴포넌트가 자신의 데이터를 로드하고 이벤트 핸들러를 연결하도록 위임
     const component = createComponent({
       template: matchedRoute.element,
-      setup: (props) => loadPageData(currentPath, params, props),
+      setup: matchedRoute.loadData ? (props) => matchedRoute.loadData({ ...props, params }) : undefined,
       mounted: matchedRoute.attachHandlers,
     });
 
