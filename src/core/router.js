@@ -26,18 +26,8 @@ function extractParams(routePath, currentPath) {
 }
 
 export function createRouter(routes) {
-  // base path 설정 (개발: /, 배포: /front_7th_chapter2-1/)
+  // base path 설정 (프로덕션: /front_7th_chapter2-1/, 개발: /)
   const basePath = import.meta.env.BASE_URL || "/";
-
-  /**
-   * base path 제거해서 실제 경로만 추출
-   * /front_7th_chapter2-1/ → /
-   * /front_7th_chapter2-1/product/123 → /product/123
-   */
-  const getPathWithoutBase = (fullPath) => {
-    if (basePath === "/") return fullPath;
-    return fullPath.replace(basePath, "/");
-  };
 
   const initRouter = () => {
     window.addEventListener("popstate", handleRoute);
@@ -55,9 +45,9 @@ export function createRouter(routes) {
    * 라우트 처리 (URL만 관리, 상태는 컴포넌트가 관리)
    */
   const handleRoute = async () => {
-    // 현재 URL에서 base path 제거
+    // 현재 URL에서 base path 제거 (프로덕션 환경 대응)
     const fullPath = window.location.pathname;
-    const currentPath = getPathWithoutBase(fullPath);
+    const currentPath = basePath === "/" ? fullPath : fullPath.replace(basePath, "/");
 
     const matchedRoute =
       routes.find((r) => matchStaticRoute(r, currentPath)) || routes.find((r) => matchDynamicRoute(r, currentPath));
@@ -66,14 +56,10 @@ export function createRouter(routes) {
     if (!matchedRoute) {
       // 404 페이지 렌더링
       $root.innerHTML = ErrorPage();
-
       return;
     }
-
-    // params 처리 (동적일 경우만)
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
-    // 페이지 컴포넌트 생성 (페이지가 자신의 컴포넌트를 생성)
     const component = matchedRoute.element();
 
     // 컴포넌트 마운트 (params만 전달, 나머지는 컴포넌트가 URL에서 직접 읽음)
