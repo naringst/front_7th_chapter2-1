@@ -200,7 +200,6 @@ export function attachDetailPageHandlers() {
 }
 
 let infiniteScrollObserver = null;
-let isLoadingMore = false;
 
 function setUpInfiniteScroll() {
   // 기존 Observer 제거
@@ -217,9 +216,7 @@ function setUpInfiniteScroll() {
   infiniteScrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && !isLoadingMore) {
-          isLoadingMore = true;
-
+        if (entry.isIntersecting) {
           const searchParams = new URLSearchParams(window.location.search);
           const currentPage = parseInt(searchParams.get("current")) || 1;
 
@@ -231,11 +228,6 @@ function setUpInfiniteScroll() {
 
           // 무한 스크롤 옵션과 함께 navigateTo 호출
           router.navigateTo(`/?${searchParams.toString()}`, { isInfiniteScroll: true });
-
-          // 약간의 딜레이 후 플래그 해제
-          setTimeout(() => {
-            isLoadingMore = false;
-          }, 300);
         }
       });
     },

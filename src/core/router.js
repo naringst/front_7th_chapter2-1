@@ -140,17 +140,24 @@ export function createRouter(routes, state) {
     // params 처리 (동적일 경우만)
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
-    // 무한 스크롤이 아닐 때만 로딩 UI 렌더링
-    if (!isInfiniteScrolling) {
-      const loadingHTML = matchedRoute.element({ ...state.getState(), params, loading: true });
-      $root.innerHTML = loadingHTML;
-    }
+    // 로딩 UI 먼저 렌더링 (loading: true)
+    const loadingHTML = matchedRoute.element({
+      ...state.getState(),
+      params,
+      loading: true,
+    });
+    $root.innerHTML = loadingHTML;
 
     // 데이터 로드
     const pageData = await loadPageData(currentPath, params, state.getState(), isInfiniteScrolling);
 
     // 실제 데이터로 렌더링 (loading: false)
-    const html = matchedRoute.element({ ...state.getState(), params, loading: false, ...pageData });
+    const html = matchedRoute.element({
+      ...state.getState(),
+      params,
+      loading: false,
+      ...pageData,
+    });
     $root.innerHTML = html;
 
     // 페이지별 이벤트 리스너 붙이기
