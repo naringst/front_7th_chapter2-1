@@ -89,7 +89,7 @@ export function createRouter(routes, state) {
     const params = matchedRoute.path.includes(":") ? extractParams(matchedRoute.path, currentPath) : {};
 
     // 페이지 컴포넌트 생성 (페이지가 자신의 컴포넌트를 생성)
-    const component = matchedRoute.element(matchedRoute.attachHandlers);
+    const component = matchedRoute.element();
 
     // 컴포넌트 마운트
     await component.mount(

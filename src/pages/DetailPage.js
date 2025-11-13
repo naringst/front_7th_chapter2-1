@@ -6,6 +6,7 @@ import { DetailInfo } from "../components/products/productDetail/DetailInfo";
 import { RelatedItems } from "../components/products/productDetail/RelatedItems";
 import { loadDetailPageData } from "../utils/dataLoaders.js";
 import { createComponent } from "../core/component.js";
+import { attachDetailPageHandlers } from "../handlers/index.js";
 
 // loading prop에 따라 UI 분기
 const template = ({ loading = true, product = null }) => {
@@ -47,13 +48,12 @@ const loadData = async (props) => {
 
 /**
  * DetailPage 컴포넌트 생성
- * @param {Function} attachHandlers - 이벤트 핸들러 연결 함수
  * @returns {Object} 컴포넌트 인스턴스
  */
-export const DetailPage = (attachHandlers) => {
+export const DetailPage = () => {
   return createComponent({
     template,
     setup: loadData,
-    mounted: attachHandlers,
+    mounted: attachDetailPageHandlers,
   });
 };

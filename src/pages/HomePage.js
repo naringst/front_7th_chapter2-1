@@ -3,8 +3,8 @@ import { Search } from "../components/search/Serach.js";
 import { PageLayout } from "./PageLayout.js";
 import { loadHomePageData as loadHomePageDataFromLoader } from "../utils/dataLoaders.js";
 import { createComponent } from "../core/component.js";
+import { attachHomePageEventListeners } from "../handlers/index.js";
 
-// loading prop에 따라 UI 분기
 const template = ({
   loading = true,
   limit = 20,
@@ -44,13 +44,12 @@ const loadData = async (state) => {
 
 /**
  * HomePage 컴포넌트 생성
- * @param {Function} attachHandlers - 이벤트 핸들러 연결 함수
  * @returns {Object} 컴포넌트 인스턴스
  */
-export const HomePage = (attachHandlers) => {
+export const HomePage = () => {
   return createComponent({
     template,
     setup: loadData,
-    mounted: attachHandlers,
+    mounted: attachHomePageEventListeners,
   });
 };
