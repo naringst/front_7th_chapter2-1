@@ -2,7 +2,7 @@
  * localStorage 유틸리티 함수
  */
 
-const CART_STORAGE_KEY = "shopping-cart";
+const CART_STORAGE_KEY = "shopping_cart";
 
 /**
  * localStorage에서 cartState 복원
