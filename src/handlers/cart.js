@@ -54,6 +54,11 @@ function setupCartModalDelegation() {
       const checkedCheckboxes = document.querySelectorAll(".cart-item-checkbox:checked");
       const selectedProductIds = Array.from(checkedCheckboxes).map((checkbox) => checkbox.dataset.productId);
       removeSelectedFromCart(selectedProductIds);
+      // 버튼 숨기기 (상품 삭제 후 자동으로 모달이 리렌더링되지만, 즉시 반영)
+      const removeSelectedBtn = document.getElementById("cart-modal-remove-selected-btn");
+      if (removeSelectedBtn) {
+        removeSelectedBtn.classList.add("hidden");
+      }
     },
     // 전체 비우기
     "cart-clear": () => {
@@ -78,6 +83,8 @@ function setupCartModalDelegation() {
       itemCheckboxes.forEach((checkbox) => {
         checkbox.checked = element.checked;
       });
+      // 선택한 상품 삭제 버튼 업데이트
+      updateRemoveSelectedButton();
     },
     // 개별 체크박스
     "cart-item-checkbox": () => {
@@ -87,6 +94,8 @@ function setupCartModalDelegation() {
       if (selectAllCheckbox) {
         selectAllCheckbox.checked = checkedCount === allCheckboxes.length && allCheckboxes.length > 0;
       }
+      // 선택한 상품 삭제 버튼 업데이트
+      updateRemoveSelectedButton();
     },
   };
 
@@ -167,6 +176,25 @@ export function showCartModal() {
 
   // 모달 이벤트 설정
   setupModalEvents();
+
+  // 모달 열릴 때 선택된 상품이 있으면 버튼 표시
+  updateRemoveSelectedButton();
+}
+
+/**
+ * 선택한 상품 삭제 버튼 업데이트
+ */
+function updateRemoveSelectedButton() {
+  const checkedCount = document.querySelectorAll(".cart-item-checkbox:checked").length;
+  const removeSelectedBtn = document.getElementById("cart-modal-remove-selected-btn");
+  if (removeSelectedBtn) {
+    if (checkedCount > 0) {
+      removeSelectedBtn.classList.remove("hidden");
+      removeSelectedBtn.textContent = `선택한 상품 삭제 (${checkedCount}개)`;
+    } else {
+      removeSelectedBtn.classList.add("hidden");
+    }
+  }
 }
 
 /**
@@ -190,6 +218,8 @@ function setupModalEvents() {
     if (container) {
       container.innerHTML = CartIcon();
     }
+    // 모달 리렌더링 후 버튼 상태 업데이트
+    updateRemoveSelectedButton();
   });
 }
 

@@ -13,8 +13,8 @@ export const CartModalAction = ({ items = [] }) => {
         <!-- 액션 버튼들 -->
         <div class="space-y-2">
           <button id="cart-modal-remove-selected-btn" data-action="cart-remove-selected" class="w-full bg-red-600 text-white py-2 px-4 rounded-md 
-                     hover:bg-red-700 transition-colors text-sm">
-            선택한 상품 삭제
+                     hover:bg-red-700 transition-colors text-sm hidden">
+            선택한 상품 삭제 (0개)
           </button>
           <div class="flex gap-2">
             <button id="cart-modal-clear-cart-btn" data-action="cart-clear" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md 
