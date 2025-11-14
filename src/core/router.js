@@ -7,8 +7,26 @@ export function createRouter(routes) {
   const basePath = getBasePath();
 
   const getCurrentPath = () => {
-    const fullPath = window.location.pathname;
-    return basePath === "/" ? fullPath : fullPath.replace(basePath, "/");
+    let fullPath = window.location.pathname;
+    if (basePath === "/") {
+      // base path가 없으면 끝의 슬래시만 제거 (루트 제외)
+      return fullPath === "/" ? "/" : fullPath.replace(/\/$/, "");
+    }
+    // base path 제거 (정확히 매칭되도록)
+    if (fullPath.startsWith(basePath)) {
+      let pathWithoutBase = fullPath.slice(basePath.length);
+      // 슬래시로 시작하도록 보장
+      if (!pathWithoutBase.startsWith("/")) {
+        pathWithoutBase = `/${pathWithoutBase}`;
+      }
+      // 끝의 슬래시 제거 (루트 경로 제외)
+      if (pathWithoutBase !== "/" && pathWithoutBase.endsWith("/")) {
+        pathWithoutBase = pathWithoutBase.slice(0, -1);
+      }
+      return pathWithoutBase;
+    }
+    // base path가 없으면 끝의 슬래시만 제거 (루트 제외)
+    return fullPath === "/" ? "/" : fullPath.replace(/\/$/, "");
   };
 
   const findMatchedRoute = (currentPath) => {
