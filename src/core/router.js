@@ -1,9 +1,10 @@
 import { ErrorPage } from "../pages/ErrorPage.js";
 import { matchStaticRoute, matchDynamicRoute, extractParams } from "./routerUtils.js";
+import { getBasePath, buildFullPath } from "../handlers/utils/urlHelpers.js";
 
 export function createRouter(routes) {
   // base path 설정 (프로덕션: /front_7th_chapter2-1/, 개발: /)
-  const basePath = import.meta.env.BASE_URL || "/";
+  const basePath = getBasePath();
 
   const getCurrentPath = () => {
     const fullPath = window.location.pathname;
@@ -64,7 +65,7 @@ export function createRouter(routes) {
    * @param {string} path - 이동할 경로 (예: "/", "/product/123")
    */
   const navigateTo = (path) => {
-    const fullPath = basePath + path.replace(/^\//, "");
+    const fullPath = buildFullPath(path);
     window.history.pushState({}, "", fullPath);
     handleRoute();
   };

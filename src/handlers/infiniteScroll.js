@@ -1,5 +1,6 @@
 import { getProducts } from "../api/productApi.js";
 import { ProductItem } from "../components/products/productList/ProductItem.js";
+import { buildFullPath } from "./utils/urlHelpers.js";
 
 let infiniteScrollObserver = null;
 let isLoading = false;
@@ -63,9 +64,11 @@ export function setUpInfiniteScroll() {
             }
 
             // URL 업데이트 (히스토리만, 페이지 리로드 없이)
+            // 무한 스크롤은 라우팅을 트리거하지 않고 URL만 업데이트
             urlParams.set("current", String(nextPage));
-            const newUrl = `/?${urlParams.toString()}`;
-            window.history.pushState({}, "", newUrl);
+            const pathWithParams = `/?${urlParams.toString()}`;
+            const fullPath = buildFullPath(pathWithParams);
+            window.history.pushState({}, "", fullPath);
 
             // 로딩 인디케이터 제거
             const loadingIndicator = document.getElementById("infinite-scroll-loading");

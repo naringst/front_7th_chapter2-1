@@ -1,6 +1,24 @@
 import { router } from "../../App.js";
 
 /**
+ * Base path 가져오기
+ * @returns {string} base path (프로덕션: /front_7th_chapter2-1/, 개발: /)
+ */
+export function getBasePath() {
+  return import.meta.env.BASE_URL || "/";
+}
+
+/**
+ * Base path를 포함한 전체 경로 생성
+ * @param {string} path - 경로 (예: "/", "/?category1=생활/건강")
+ * @returns {string} base path를 포함한 전체 경로
+ */
+export function buildFullPath(path) {
+  const basePath = getBasePath();
+  return basePath + path.replace(/^\//, "");
+}
+
+/**
  * URL searchParams 업데이트
  * @param {Object} updates - 업데이트할 파라미터 객체
  * @param {boolean} resetPage - current를 1로 리셋할지 여부 (기본: true)
