@@ -1,0 +1,1 @@
+import{getCategories as e,getProduct as t,getProducts as n}from"./index-C72ZhbBY.js";export{e as getCategories};
