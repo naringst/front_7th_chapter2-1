@@ -1,6 +1,8 @@
 import { setupEventDelegation } from "./utils/eventDelegation.js";
 import { handleDetailPageAddToCart, handleQuantityIncrease, handleQuantityDecrease } from "./actions/productActions.js";
 import { navigateToProduct } from "./actions/navigationActions.js";
+import { applyCategory1Filter } from "./actions/filterActions.js";
+import { navigateWithParams } from "./utils/urlHelpers.js";
 
 let cleanupFunctions = [];
 
@@ -31,6 +33,21 @@ export function setupDetailPageDelegation() {
       const productId = element.dataset.productId;
       if (productId) {
         navigateToProduct(productId);
+      }
+    },
+    // Breadcrumb 카테고리1 클릭 - 홈으로 이동하면서 카테고리1 필터 적용
+    "navigate-category1": (_, element) => {
+      const category1 = element.dataset.category1;
+      if (category1) {
+        applyCategory1Filter(category1);
+      }
+    },
+    // Breadcrumb 카테고리2 클릭 - 홈으로 이동하면서 카테고리1,2 필터 적용
+    "navigate-category2": (_, element) => {
+      const category1 = element.dataset.category1;
+      const category2 = element.dataset.category2;
+      if (category1 && category2) {
+        navigateWithParams({ category1, category2 });
       }
     },
   };
