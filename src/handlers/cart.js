@@ -1,6 +1,7 @@
 import { cartState } from "../stores/cartStore.js";
 import { CartIcon } from "../components/cart/CartIcon";
 import { CartModal } from "../components/cart/CartModal";
+import { CartModalHeader } from "../components/cart/CartModal/CartModalHeader/CartModalHeader";
 import { CartModalContent } from "../components/cart/CartModal/CartModalContent/CartModalContent";
 import { CartModalAction } from "../components/cart/CartModal/CartModalAction/CartModalAction";
 import { setupEventDelegation } from "./utils/eventDelegation.js";
@@ -126,6 +127,17 @@ function setupCartModalDelegation() {
 }
 
 /**
+ * CartModal 헤더 렌더링
+ */
+function renderCartModalHeader() {
+  const headerContainer = document.querySelector("[data-cart-modal-header]");
+  if (!headerContainer) return;
+
+  const { items } = cartState.getState();
+  headerContainer.innerHTML = CartModalHeader({ count: items.length });
+}
+
+/**
  * CartModal 렌더링 (내용만 업데이트)
  */
 function renderCartModalContent() {
@@ -212,6 +224,9 @@ function setupModalEvents() {
     modalUnsubscribe();
   }
   modalUnsubscribe = cartState.subscribe(() => {
+    // 헤더 업데이트 (cartState 구독)
+    renderCartModalHeader();
+    // 컨텐츠 업데이트
     renderCartModalContent();
     // CartIcon도 함께 업데이트
     const container = document.querySelector("[data-cart-icon]");

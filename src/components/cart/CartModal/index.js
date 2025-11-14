@@ -10,7 +10,9 @@ export const CartModal = ({ items = [] } = {}) => {
       <!-- 모달 컨테이너 -->
       <div class="flex min-h-full items-end justify-center p-0 sm:items-center sm:p-4">
         <div class="relative bg-white rounded-t-lg sm:rounded-lg shadow-xl w-full max-w-md sm:max-w-lg max-h-[90vh] overflow-hidden">
-          ${CartModalHeader({ count: items.length })}
+          <div data-cart-modal-header>
+            ${CartModalHeader({ count: items.length })}
+          </div>
           <!-- 컨텐츠 -->
           <div class="flex flex-col max-h-[calc(90vh-120px)]" data-cart-modal-content>
             ${CartModalContent({ items })}
